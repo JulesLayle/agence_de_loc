@@ -1,0 +1,515 @@
+/* --- 1. Variables & Reset --- */
+:root {
+    --color-bg: #0a0a0c;
+    --color-surface: #1a1a1e;
+    --color-surface-trans: rgba(26, 26, 30, 0.85);
+    --color-border: #333;
+    --color-text: #f0f0f0;
+    --color-text-muted: #888;
+    
+    /* Couleur par défaut (Dubaï) */
+    --color-accent-base: #00ffff; /* Neon Cyan */
+    --neon-shadow-accent: 
+        0 0 5px var(--color-accent-base),
+        0 0 10px var(--color-accent-base),
+        0 0 15px var(--color-accent-base);
+    --neon-shadow-white: 
+        0 0 5px #fff,
+        0 0 10px #fff;
+    
+    --font-heading: 'Orbitron', sans-serif;
+    --font-body: 'Poppins', sans-serif;
+}
+
+/* Thèmes par ville */
+.theme-dubai    { --color-accent-base: #00ffff; } /* Cyan */
+.theme-marrakech { --color-accent-base: #ff8c00; } /* Orange */
+.theme-pattaya   { --color-accent-base: #ff00ff; } /* Magenta */
+.theme-marseille { --color-accent-base: #007bff; } /* Bleu vif */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Appliquer le fond noir à l'élément racine */
+html {
+    background-color: var(--color-bg); 
+}
+
+html, body {
+    width: 100%;
+    min-height: 100vh;
+    font-family: var(--font-body);
+    color: var(--color-text);
+    overflow-x: hidden;
+}
+
+/* Le body doit être en "opacité" durant la transition */
+body {
+    /* Animation de transition */
+    opacity: 1;
+    transition: opacity 0.3s ease-out;
+    animation: fadeIn 0.5s ease-in-out;
+    /* Assurez-vous qu'il ne masque pas le fond HTML quand il n'est pas "fade-out" */
+    background-color: transparent; 
+}
+
+body {
+    /* Animation de transition */
+    opacity: 1;
+    transition: opacity 0.3s ease-out;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+body.fade-out {
+    opacity: 0;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+a {
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* --- 2. Arrière-plan (à personnaliser) --- */
+.video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    
+    /* Fond par défaut (fallback) */
+    background: #0a0a0c; 
+    
+    /* Effet de transition fondu entre les images */
+    transition: background-image 0.5s ease-in-out; 
+    
+    background-repeat: no-repeat;
+    background-size: cover; /* Réduit le zoom de 10% */
+    background-position: center 45%;
+    
+    filter: brightness(0.4) grayscale(0.2);
+}
+
+/* CORRECTION CLÉ : On utilise `body.classe` pour cibler le .video-background */
+body.theme-dubai .video-background {
+    background-image: url('../images/backgrounds/dubai.jpg');
+}
+body.theme-marrakech .video-background {
+    background-image: url('../images/backgrounds/marrakech.jpg');
+}
+body.theme-pattaya .video-background {
+    background-image: url('../images/backgrounds/pattaya.jpg');
+}
+body.theme-marseille .video-background {
+    background-image: url('../images/backgrounds/marseille.jpg');
+}
+
+
+/* --- 3. Header & Navigation --- */
+.main-header {
+    width: 100%;
+    padding: 20px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+}
+
+.main-header.fixed-header {
+    position: fixed;
+    background: var(--color-surface-trans);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.logo {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: var(--neon-shadow-white), 0 0 20px var(--color-accent-base);
+    transition: text-shadow 0.3s ease;
+}
+
+.main-nav {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.city-nav {
+    display: flex;
+    gap: 20px;
+}
+
+.city-nav a {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 5px 10px;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.city-nav a:hover {
+    color: var(--color-accent-base);
+    text-shadow: 0 0 5px var(--color-accent-base);
+}
+
+.city-nav a.active {
+    color: var(--color-accent-base);
+    border-bottom-color: var(--color-accent-base);
+    text-shadow: 0 0 10px var(--color-accent-base);
+}
+
+/* --- 4. Boutons --- */
+.btn {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 10px 20px;
+    border: 2px solid var(--color-accent-base);
+    background: transparent;
+    color: var(--color-accent-base);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn:hover {
+    background: var(--color-accent-base);
+    color: var(--color-bg);
+    box-shadow: var(--neon-shadow-accent);
+    transform: scale(1.05);
+}
+
+.btn-nav {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+}
+
+/* --- 5. Contenu Global --- */
+.container {
+    width: 90%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.page-title {
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 40px;
+    color: #fff;
+    text-shadow: var(--neon-shadow-white), 0 0 20px var(--color-accent-base);
+}
+
+/* --- 6. Page d'accueil (index.html) --- */
+.home-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding-top: 100px; /* Dégagement header */
+    text-align: center;
+}
+
+.main-logo-home {
+    font-family: var(--font-heading);
+    font-size: 6rem;
+    color: #fff;
+    text-shadow: var(--neon-shadow-white), 0 0 30px var(--color-accent-base);
+    margin-bottom: 0;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: var(--color-text-muted);
+    margin-bottom: 60px;
+    letter-spacing: 2px;
+}
+
+.category-nav {
+    display: flex;
+    gap: 30px;
+}
+
+/* Modifiez cette règle existante */
+.category-card {
+    background: var(--color-surface-trans); /* Gardé en fallback */
+    border: 1px solid var(--color-border);
+    backdrop-filter: blur(5px);
+    width: 300px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    
+    /* Ajouts pour l'image de fond */
+    background-size: cover;
+    background-position: center;
+}
+
+/* AJOUTEZ CETTE NOUVELLE RÈGLE :
+   Crée un filtre sombre par-dessus l'image de fond 
+   pour assurer la lisibilité du texte.
+*/
+.category-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 12, 0.6); /* Fond sombre semi-transparent */
+    z-index: 1; /* Se place au-dessus de l'image de fond */
+    transition: background 0.3s ease;
+}
+
+/* Modifiez cette règle (ou .card-content) pour que le texte passe au-dessus du filtre */
+.category-card h2,
+.category-card p {
+    z-index: 2; /* Se place au-dessus du filtre ::after */
+    position: relative; /* Nécessaire pour que z-index fonctionne */
+}
+
+/* On éclaircit le filtre au survol */
+.category-card:hover::after {
+    background: rgba(10, 10, 12, 0.4);
+}
+.category-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, var(--color-accent-base), transparent);
+    opacity: 0.3;
+    transition: left 0.5s ease;
+}
+
+.category-card:hover::before {
+    left: 100%;
+}
+
+.category-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--color-accent-base);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px var(--color-accent-base);
+}
+
+.category-card h2 {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    color: #fff;
+    text-shadow: var(--neon-shadow-white);
+    margin-bottom: 10px;
+    z-index: 2;
+}
+
+.category-card p {
+    font-size: 1rem;
+    color: var(--color-text-muted);
+    z-index: 2;
+}
+
+/* --- 7. Pages Produits (voitures.html, etc.) --- */
+.product-page {
+    padding-top: 120px; /* Dégagement header fixe */
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+.product-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--color-accent-base);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7), 0 0 10px var(--color-accent-base);
+}
+
+.product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    filter: saturate(1.1);
+    transition: transform 0.3s ease;
+    /* Fallback si image manquante */
+    background-color: #222; 
+    color: #555;
+    text-align: center;
+    line-height: 200px;
+}
+
+.product-card:hover img {
+    transform: scale(1.05);
+}
+
+.product-info {
+    padding: 20px;
+}
+
+.product-info h3 {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.product-price {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-accent-base);
+    margin-bottom: 20px;
+}
+
+.product-info .btn {
+    width: 100%;
+}
+
+
+/* --- 8. Footer --- */
+.main-footer {
+    width: 100%;
+    padding: 30px 5%;
+    margin-top: 60px;
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    border-top: 1px solid var(--color-border);
+    background: var(--color-bg);
+}
+
+.social-icons {
+    margin-bottom: 15px;
+}
+
+.social-icons a {
+    font-weight: 600;
+    margin: 0 15px;
+    color: var(--color-text-muted);
+    transition: all 0.3s ease;
+}
+
+.social-icons a:hover {
+    color: var(--color-accent-base);
+    text-shadow: 0 0 5px var(--color-accent-base);
+}
+
+/* --- 9. Responsive --- */
+@media (max-width: 992px) {
+    .main-logo-home {
+        font-size: 4.5rem;
+    }
+    .category-nav {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .category-card {
+        width: 100%;
+        max-width: 400px;
+        height: 150px;
+    }
+    .product-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .main-header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+    .main-header.fixed-header {
+        position: relative; /* Désactiver fixe sur petit écran si ça gène */
+    }
+    .main-nav {
+        flex-direction: column;
+        width: 100%;
+        gap: 15px;
+    }
+    .city-nav {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .btn-nav {
+        width: 100%;
+        text-align: center;
+    }
+    .product-page {
+        padding-top: 30px; /* Moins de padding car header n'est plus fixe */
+    }
+    .page-title {
+        font-size: 2.5rem;
+    }
+    .product-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-logo-home {
+        font-size: 3.5rem;
+    }
+    .subtitle {
+        font-size: 1rem;
+    }
+    .category-card {
+        height: 120px;
+    }
+    .category-card h2 {
+        font-size: 2rem;
+    }
+    .product-grid {
+        grid-template-columns: 1fr; /* Une seule colonne */
+    }
+}
+
+/* Images de fond pour chaque carte */
+#card-voitures {
+    background-image: url('../images/categories/voitures.jpg');
+}
+#card-motos {
+    background-image: url('../images/categories/motos.jpg');
+}
+#card-jetskis {
+    background-image: url('../images/categories/jetskis.jpg');
+}
